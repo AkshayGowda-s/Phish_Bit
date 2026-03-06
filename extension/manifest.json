@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Phish-Bit Interceptor",
+  "version": "1.0",
+  "description": "Scans for phishing links and QR codes.",
+  "permissions": ["activeTab", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["jsQR.js", "content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

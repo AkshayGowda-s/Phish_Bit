@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { width: 250px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px; }
+        .header { font-weight: bold; color: #2c3e50; border-bottom: 1px solid #eee; margin-bottom: 10px; }
+        #status { font-size: 14px; color: #7f8c8d; }
+        .warning-box { display: none; background: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; margin-top: 10px; border: 1px solid #ef9a9a; }
+    </style>
+</head>
+<body>
+    <div class="header">Phish-Bit Interceptor</div>
+    <div id="status">Scanning for threats...</div>
+    <div id="warning" class="warning-box">
+        <strong>▲ Scam Detected!</strong>
+        <p id="message"></p>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
