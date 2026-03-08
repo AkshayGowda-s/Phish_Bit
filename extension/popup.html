@@ -1,20 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phish-Bit Interceptor</title>
     <style>
-        body { width: 250px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px; }
-        .header { font-weight: bold; color: #2c3e50; border-bottom: 1px solid #eee; margin-bottom: 10px; }
-        #status { font-size: 14px; color: #7f8c8d; }
-        .warning-box { display: none; background: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; margin-top: 10px; border: 1px solid #ef9a9a; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            width: 320px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            padding: 16px;
+        }
+        
+        .header { 
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .header-icon {
+            font-size: 20px;
+        }
+        
+        #status { 
+            font-size: 14px;
+            color: #7f8c8d;
+            padding: 10px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .warning-box { 
+            display: none;
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: 2px solid #ef9a9a;
+        }
+        
+        .warning-box strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        #message {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .info-section {
+            margin-top: 12px;
+            padding: 10px;
+            background: #e8f4f8;
+            border-left: 3px solid #3498db;
+            border-radius: 3px;
+            font-size: 12px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .info-section strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #2980b9;
+        }
+        
+        .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #27ae60;
+            margin-right: 4px;
+        }
+        
+        .dot.warning {
+            background: #f39c12;
+        }
+        
+        .dot.danger {
+            background: #e74c3c;
+        }
     </style>
 </head>
 <body>
-    <div class="header">Phish-Bit Interceptor</div>
-    <div id="status">Scanning for threats...</div>
-    <div id="warning" class="warning-box">
-        <strong>▲ Scam Detected!</strong>
-        <p id="message"></p>
+    <div class="container">
+        <div class="header">
+            <span class="header-icon">🛡️</span>
+            <span>Phish-Bit Interceptor</span>
+        </div>
+        
+        <div id="status">Scanning for threats...</div>
+        
+        <div id="warning" class="warning-box">
+            <strong>▲ Threat Detected!</strong>
+            <p id="message"></p>
+        </div>
+        
+        <div class="info-section">
+            <strong>How it works:</strong>
+            • Scans all links on the page
+            • Detects QR code URLs
+            • Checks with AI backend
+            • Shows warnings in real-time
+        </div>
+        
+        <div class="buttons">
+            <button class="btn-primary" id="scan-page">🔍 Scan Page</button>
+            <button class="btn-secondary" id="settings">⚙️ Settings</button>
+        </div>
     </div>
+    
     <script src="popup.js"></script>
 </body>
 </html>

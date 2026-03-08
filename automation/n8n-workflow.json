@@ -1,0 +1,80 @@
+{
+  "name": "Phish-Bit URL Check",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "check-url",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://urlhaus-api.abuse.ch/v1/url/?url={{encodeURIComponent($json.url)}}",
+        "method": "GET",
+        "options": {}
+      },
+      "name": "Check URLhaus Database",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check multiple threat sources\nconst url = $('Webhook').first().json.url;\nconst urlhausData = $('Check URLhaus Database').first().json;\n\n// URLhaus check\nconst isInURLhaus = urlhausData.query_status === 'ok' && urlhausData.result && urlhausData.result.length > 0;\n\n// Determine risk level\nlet risk = 'Safe';\nlet message = 'URL appears to be legitimate';\nlet confidence = 0.85;\n\nif (isInURLhaus) {\n  risk = 'Scam';\n  message = `URL found in URLhaus threat database: ${urlhausData.result[0].threat || 'Unknown threat'}`;\n  confidence = 0.99;\n}\n\n// Check for suspicious patterns\nconst suspiciousPatterns = [\n  /bit\\.ly/i,\n  /tinyurl/i,\n  /shortened/i,\n  /goo\\.gl/i\n];\n\nif (suspiciousPatterns.some(pattern => pattern.test(url)) && risk === 'Safe') {\n  risk = 'Suspicious';\n  message = 'URL uses a shortener service (may hide destination)';\n  confidence = 0.65;\n}\n\n// Check for HTTP (not HTTPS)\nif (url.startsWith('http://') && !url.includes('localhost')) {\n  if (risk === 'Safe') {\n    risk = 'Suspicious';\n    confidence = 0.6;\n  } else {\n    confidence = Math.max(confidence, 0.9);\n  }\n  message = 'Not using secure HTTPS connection';\n}\n\nreturn [{\n  json: {\n    url: url,\n    risk: risk,\n    message: message,\n    confidence: confidence,\n    timestamp: new Date().toISOString(),\n    details: {\n      inURLhaus: isInURLhaus,\n      urlhausData: isInURLhaus ? urlhausData.result[0] : null\n    }\n  }\n}];"
+      },
+      "name": "Analyze Threat",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {},
+      "name": "Return Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check URLhaus Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check URLhaus Database": {
+      "main": [
+        [
+          {
+            "node": "Analyze Threat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Threat": {
+      "main": [
+        [
+          {
+            "node": "Return Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}
